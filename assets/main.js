@@ -4,33 +4,7 @@ let eventBox = document.getElementById("event-box");
 let birthBox = document.getElementById("birth-box");
 let deathBox = document.getElementById("death-box");
 let musicBox = document.getElementById("music-box");
-let videoBox = document.getElementById("video-box");
 let iframeEl = document.getElementById("iframe");
-
-function getNews () {
-// bing news search - limited to 1000 requests per month, includes links to article images if needed
-    fetch("https://bing-news-search1.p.rapidapi.com/news/search?q=florida%20man&safeSearch=Strict&textFormat=Raw&freshness=Day", {
-        "method": "GET",
-        "headers": {
-            "x-bingapis-sdk": "true",
-            "x-rapidapi-key": "c2dbb5a7fdmsha6ee8767c5acd11p1dee2ejsne2cc8e8d8536",
-            "x-rapidapi-host": "bing-news-search1.p.rapidapi.com"
-        }
-    })
-    .then(response => {
-        return response.json();
-    })
-    .then (data => {
-        console.log(data);
-        // finding the article name
-        console.log(data.value[0].name);
-        // finding the article image url
-        console.log(data.value[0].image.contentUrl);
-    })
-    .catch(err => {
-        console.error(err);
-    });
-}
 
 function getWikiDeaths (month, day, userYear) {
         fetch(`https://byabbe.se/on-this-day/${month}/${day}/deaths.json`)
@@ -43,7 +17,7 @@ function getWikiDeaths (month, day, userYear) {
                     deathBox.innerHTML = data.deaths[i].description + " died on this day.";
                     break;
                 } else {
-                    deathBox.innerHTML = "No data for this day. Pick a different date."
+                    deathBox.innerHTML = "No death data for this day. Try a different date."
                 }
             }
         })
@@ -63,7 +37,7 @@ function getWikiBirths (month, day, userYear) {
                 birthBox.innerHTML = data.births[i].description + " was born on this day.";
                 break;
             } else {
-                birthBox.innerHTML = "No data for this day. Pick a different date."
+                birthBox.innerHTML = "No birth data for this day. Try a different date."
             }
         }
     })
@@ -83,7 +57,7 @@ function getWikiEvents (month, day, userYear) {
                     eventBox.innerHTML = data.events[i].description;
                     break;
                 } else {
-                    eventBox.innerHTML = "No data for this day. Pick a different date."
+                    eventBox.innerHTML = "No event data for this day. Try a different date."
                 }
             }
         })
@@ -108,10 +82,10 @@ function getMusicVideo (artist, song) {
     })
     .then (data => {
         let youtubeLink = data.track[0].strMusicVid;
-        console.log(youtubeLink);
         let embedLink = youtubeLink.replace("watch?v=", "embed/");
-        console.log(embedLink);
         iframeEl.setAttribute("src", `${embedLink}`);
+        iframeEl.setAttribute("width", "420");
+        iframeEl.setAttribute("height", "315");
     })
     .catch(err => {
         console.error(err);
