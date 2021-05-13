@@ -8,7 +8,7 @@ let musicBox = document.getElementById("music-box");
 let iframeEl = document.getElementById("iframe");
 let videoBox = document.getElementById("video-box");
 
-// fetches death data from the wiki API based on the month/day/year user input. API returns a list of deaths in an array by year, so this loops through the years and looks for the first instance that matches the user's input year. the "description" (name) of that matching instance is printedif no match is found, an error message is displayed in the box. 
+// fetches death data from the wiki API based on the month/day/year user input. API returns a list of deaths in an array by year, so this loops through the years and looks for the first instance that matches the user's input year. the "description" (name) of that matching instance is printed. if no match is found, an error message is displayed in the box. 
 function getWikiDeaths (month, day, userYear) {
         fetch(`https://byabbe.se/on-this-day/${month}/${day}/deaths.json`)
         .then(response => {
@@ -87,7 +87,6 @@ function getMusicVideo (artist, song) {
         return response.json();
     })
     .then (data => {
-        console.log(data);
         // checks to make sure the track value is not null - some wording from Billboard is not compatible with AudioDB and will return a null track
         if (data.track !== null) {
             let youtubeLink = data.track[0].strMusicVid;
@@ -95,10 +94,8 @@ function getMusicVideo (artist, song) {
             if (youtubeLink !== null) {
                 // converts the link returned by the API into an embed-friendly format
                 let embedLink = youtubeLink.replace("watch?v=", "embed/");
-                let finalLink = embedLink.replace("http", "https");
-                console.log(finalLink);
                 // adds attributes to the iframe including the video source, width, and height
-                iframeEl.setAttribute("src", `${finalLink}`);
+                iframeEl.setAttribute("src", `${embedLink}`);
                 iframeEl.setAttribute("width", "420");
                 iframeEl.setAttribute("height", "315");
             } else {
