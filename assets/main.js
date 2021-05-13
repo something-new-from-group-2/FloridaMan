@@ -87,6 +87,7 @@ function getMusicVideo (artist, song) {
         return response.json();
     })
     .then (data => {
+        console.log(data);
         // checks to make sure the track value is not null - some wording from Billboard is not compatible with AudioDB and will return a null track
         if (data.track !== null) {
             let youtubeLink = data.track[0].strMusicVid;
@@ -94,8 +95,10 @@ function getMusicVideo (artist, song) {
             if (youtubeLink !== null) {
                 // converts the link returned by the API into an embed-friendly format
                 let embedLink = youtubeLink.replace("watch?v=", "embed/");
+                let finalLink = embedLink.replace("http", "https");
+                console.log(finalLink);
                 // adds attributes to the iframe including the video source, width, and height
-                iframeEl.setAttribute("src", `${embedLink}`);
+                iframeEl.setAttribute("src", `${finalLink}`);
                 iframeEl.setAttribute("width", "420");
                 iframeEl.setAttribute("height", "315");
             } else {
