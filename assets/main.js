@@ -5,7 +5,6 @@ let eventBox = document.getElementById("event-box");
 let birthBox = document.getElementById("birth-box");
 let deathBox = document.getElementById("death-box");
 let musicBox = document.getElementById("music-box");
-let iframeEl = document.getElementById("iframe");
 let videoBox = document.getElementById("video-box");
 
 // fetches death data from the wiki API based on the month/day/year user input. API returns a list of deaths in an array by year, so this loops through the years and looks for the first instance that matches the user's input year. the "description" (name) of that matching instance is printed. if no match is found, an error message is displayed in the box. 
@@ -87,10 +86,10 @@ function getMusicVideo (artist, song) {
         return response.json();
     })
     .then (data => {
+        videoBox.innerHTML = "";
         // checks to make sure the track value is not null - some wording from Billboard is not compatible with AudioDB and will return a null track
         if (data.track !== null) {
             let youtubeLink = data.track[0].strMusicVid;
-            // if (artistArray.includes("Featuring") === true)
             // not all AudioDB tracks include music videos - this ensures the youtube link variable is not null before continuing
             if (youtubeLink !== null) {
                 let youtubeArray = youtubeLink.split('');
@@ -98,24 +97,31 @@ function getMusicVideo (artist, song) {
                     youtubeArray.splice(4, 0, "s");
                     youtubeLink = youtubeArray.join('');
                 }
-                console.log(youtubeLink);
                 // converts the link returned by the API into an embed-friendly format
                 let embedLink = youtubeLink.replace("watch?v=", "embed/");
-                // adds attributes to the iframe including the video source, width, and height
+
+                // checks if an iframe currently exists in the document - if it does, that iframe is removed so another one can be generated. accounts for the user selecting a new date without refreshing (prevents multiple iframes from existing in the document at once)
+                let existingIframe = document.querySelector("iframe");
+                if (existingIframe !== null) {
+                    existingIframe.remove();
+                }
+
+                // creates an iframe, appends it to the appropriate div, adds attributes to iframe to generate video
+                let iframe = document.createElement('iframe');
+                let addedIframe = videoBox.appendChild(iframe);
+                addedIframe.setAttribute("id", "iframe")
+                let iframeEl = document.getElementById("iframe");
                 iframeEl.setAttribute("src", `${embedLink}`);
                 iframeEl.setAttribute("width", "420");
                 iframeEl.setAttribute("height", "315");
             } else {
-                videoBox.innerHTML = "Sorry, we can't find a music video for this song. Try a different date."
+                videoBox.textContent = "Sorry, we can't find a music video for this song. Try a different date."
             }
         } else {
-            videoBox.innerHTML = "Sorry, we can't find a music video for this song. Try a different date."
+            videoBox.textContent = "Sorry, we can't find a music video for this song. Try a different date."
         }
 
     })
-    .catch(err => {
-        console.error(err);
-    });
 }
 
 // returns Billboard Top 100 for the user input year/month/day and prints that information to the music box. artist name and track info is then passed into the getMusicVideo function to generate the music video if applicable
