@@ -90,8 +90,15 @@ function getMusicVideo (artist, song) {
         // checks to make sure the track value is not null - some wording from Billboard is not compatible with AudioDB and will return a null track
         if (data.track !== null) {
             let youtubeLink = data.track[0].strMusicVid;
+            // if (artistArray.includes("Featuring") === true)
             // not all AudioDB tracks include music videos - this ensures the youtube link variable is not null before continuing
             if (youtubeLink !== null) {
+                let youtubeArray = youtubeLink.split('');
+                if (youtubeArray[4] === ":") {
+                    youtubeArray.splice(4, 0, "s");
+                    youtubeLink = youtubeArray.join('');
+                }
+                console.log(youtubeLink);
                 // converts the link returned by the API into an embed-friendly format
                 let embedLink = youtubeLink.replace("watch?v=", "embed/");
                 // adds attributes to the iframe including the video source, width, and height
