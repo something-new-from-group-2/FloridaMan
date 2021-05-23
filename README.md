@@ -25,4 +25,4 @@ The user can select a date from the date input field by either typing a date int
 
 
 ![Visit the deployed website] https://something-new-from-group-2.github.io/FloridaMan/
-![Screenshot of deployed website] assets/images/OnThisDay.png
+![Screenshot of deployed website] (assets/images/OnThisDay.png)
